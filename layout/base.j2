@@ -1,0 +1,69 @@
+{% include "head.j2" %}
+<body id="{{ resource.meta.id if resource.meta.id else resource.slug }}">
+  {% block header %}
+  <header role="banner">
+      {% include "header.j2" %}
+  </header>
+  {% endblock header%}
+
+  {% block navigation %}
+  <nav role="navigation">
+    {% from "macros.j2" import render_nav with context %}
+    {{ render_nav(menu, 'main_nav') }}
+  </nav>
+  {% endblock navigation %}
+
+  {% block content %}
+  <div id="main">
+      {% block container %}
+      <div id="content">
+          {% block main %}
+          {% endblock main %}
+
+          {% block aside %}
+            {% if twitter.username %}
+            <aside class="sidebar">
+              <section class="odd">
+                <h1>Latest Tweets</h1>
+                <ul id="tweets">
+                  <!-- content will be inserter w/js -->
+                </ul>
+              </section>
+            </aside>
+            <span class="toggle-sidebar"></span>
+            {% endif %}
+          {% endblock aside %}
+      </div>
+      {% endblock container %}
+  </div> <!-- end of #main -->
+
+  <footer role="contentinfo">
+      {{ resource.meta.author }} - Powered by <a href="http://github.com/hyde">Hyde</a>, Theme from <a href="http://octopress.org">Octopress</a>
+  </footer>
+  {% endblock content%}
+
+  {% block js %}
+    <!-- Javascript at the bottom for fast page loading -->
+    {% block jquery %}
+      <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    {% endblock jquery %}
+
+    {% block scripts %}
+      <script src="{{ media_url('js/twitter.js') }}"></script>
+      <script>
+        getTwitterFeed("{{ twitter.username }}", {{ twitter.count }}, "{{ twitter.replies }}");
+      </script>
+    {% endblock scripts %}
+
+    <!--[if lt IE 7 ]>
+      <script src="js/libs/dd_belatedpng.js"></script>
+      <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+    <![endif]-->
+
+    {% block analytics %}
+      {% include "analytics.j2" %}
+    {% endblock analytics %}
+  {% endblock js %}
+</body>
+</html>

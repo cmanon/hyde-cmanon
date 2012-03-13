@@ -1,0 +1,81 @@
+{% extends "base.j2" %}
+
+{% block aside -%}
+<aside class="sidebar">
+    <section class="odd">
+    <h1>Links</h1>
+
+    <ul>
+        <li>
+            <a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
+        </li>
+        <li>
+            <a class="prev{{' disabled' if not resource.prev_by_time }}"
+                title="{{ resource.prev_by_time.meta.title }}"
+                {% if resource.prev_by_time %}
+                href="{{ content_url(resource.prev_by_time.url) }}"{% endif %}>Previous</a>
+        </li>
+        <li>
+            <a class="next{{' disabled' if not resource.next_by_time }}"
+                title="{{ resource.next_by_time.meta.title }}"
+                {% if resource.next_by_time %}
+                href="{{ content_url(resource.next_by_time.url) }}"{% endif %}>Next</a>
+        </li>
+    </ul>
+    </section>
+
+    <!--
+    <section class="even">
+        <h1>Tweets</h1>
+    </section>
+    -->
+</aside>
+<span class="toggle-sidebar"></span>
+{%- endblock %}
+
+{% block main -%}
+<div>
+<article>
+    <header>
+        <h1 class="entry-title">
+            {{ resource.meta.title }}
+        </h1>
+        <p class="meta">
+            <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
+                Posted: {{ resource.meta.created.strftime('%a, %d %b %Y') }}
+            </time>
+        </p>
+    </header>
+    <div class="entry-content">
+        {% filter markdown|typogrify -%}
+            {% mark post -%}
+                {% block post -%}{%- endblock %}
+            {%- endmark %}
+        {%- endfilter %}
+    </div>
+
+    <footer>
+        <p class="meta">
+        {% if resource.meta.author %}
+            <span class="byline author vcard">
+            Posted by: {{ resource.meta.author }}
+            </span>
+        {% endif %}
+        {% if resource.meta.tags %}
+            <span class="categories">
+            {% for tag in resource.meta.tags %}
+                <a href="{{ content_url('blog/tags/'~tag~'.html') }}">{{ tag }}</a>
+            {% endfor %}
+            </span>
+        {% endif %}
+        </p>
+        <div class="sharing">
+            <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="{{ twitter.username }}">Tweet</a>
+            <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+        </div>
+        <p class="meta"></p>
+    </footer>
+
+</article>
+</div>
+{%- endblock %}
